@@ -1,0 +1,137 @@
+demo-router-01# Building configuration...
+
+Current configuration : 2050 bytes
+!
+! Last configuration change at 18:29:18 UTC Thu Jun 6 2024
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+no platform punt-keepalive disable-kernel-core
+platform console virtual
+!
+hostname demo-router-01
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$gjuw$MtuCQGGPHl6.hYx.Ia35v0
+!
+aaa new-model
+!
+!
+!
+!
+!
+!
+!
+aaa session-id common
+!
+!
+!
+!
+!
+!
+!
+
+
+no ip domain lookup
+ip domain name demo.local
+ip name-server 8.8.8.8
+ip name-server 8.8.4.4
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+multilink bundle-name authenticated
+!
+!
+license udi pid CSR1000V sn 9LU1MYA5WSN
+!
+username demo password 7 097C4F0516241B06045D56796A046B
+username xsoar privilege 15 password 7 073F2040412815111843595F450A68
+!
+redundancy
+ mode none
+!
+!
+!
+ip ssh version 2
+ip ssh dh min size 2048
+ip ssh server algorithm encryption 3des-cbc aes128-cbc aes128-ctr aes192-ctr aes192-cbc aes256-cbc aes256-ctr
+!
+!
+!
+!
+interface GigabitEthernet1
+ ip address 192.168.57.190 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3
+ no ip address
+ shutdown
+ negotiation auto
+!
+!
+virtual-service csr_mgmt
+!
+ip default-gateway 192.168.57.2
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 192.168.57.2
+!
+access-list 100 permit ip 10.10.255.0 0.0.0.255 172.99.0.0 0.0.0.255
+access-list 100 permit ip 10.11.255.0 0.0.0.255 172.99.0.0 0.0.0.255
+access-list 100 permit ip 172.10.0.0 0.0.0.255 172.99.0.0 0.0.0.255
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0
+ privilege level 15
+ logging synchronous
+ transport input ssh
+ transport output ssh
+line vty 1
+ logging synchronous
+ length 0
+ transport input ssh
+ transport output ssh
+line vty 2 4
+ privilege level 15
+ logging synchronous
+ transport input ssh
+ transport output ssh
+line vty 5 15
+ privilege level 15
+ logging synchronous
+ transport input ssh
+ transport output ssh
+!
+!
+end
